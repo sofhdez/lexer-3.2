@@ -28,7 +28,7 @@
           (calc-lexer input-port))]
 
    ; ========> Comentarios
-   [(:: "//" (:* (complement (:: any-string))))  ; falta que reconozca lo que sigue ed //
+   [(:: "//" (complement (:: any-string "//" any-string)))  ; falta que reconozca lo que sigue ed //
 
     (cons `(Comentario ,(string->symbol lexeme))
           (calc-lexer input-port))]
@@ -88,4 +88,5 @@
     '()]
    ))
 
-  (calc-lexer (open-input-string "-3 * (foo + 12) //hola"))
+  (calc-lexer (open-input-string "-3 * (foo + 12) // hola"))
+  (calc-lexer (open-input-string "-3 * (foo + 12) // otra prueba"))
