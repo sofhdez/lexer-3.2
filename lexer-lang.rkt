@@ -3,7 +3,6 @@
 ; Faltan
 ;     - Flotantes (reales)
 ;     - Regla de incio de las variables
-;     - Comentarios
 
 (require parser-tools/lex)
 
@@ -14,13 +13,6 @@
 (define calc-lexer
   (lexer
    [(:+ (:or (char-range #\a #\z) (char-range #\A #\Z)))
-    ; (:: "/*" (:* (complement "*/")) "*/")
-    ; Matches any string that starts with "/*" and ends with "*/", including "/* */ */ */".
-    ; (complement "*/") matches any string except "*/". This includes "*" and "/" separately.
-    ; Thus (:* (complement "*/")) matches "*/" by first matching "*" and then matching "/".
-    ; Any other string is matched directly by (complement "*/").
-    ; In other words, (:* (complement "xx")) = any-string.
-    ; It is usually not correct to place a :* around a complement.
 
     ; ========> Variable
 
@@ -88,5 +80,5 @@
     '()]
    ))
 
-  (calc-lexer (open-input-string "-3 * (foo + 12) // hola"))
-  (calc-lexer (open-input-string "-3 * (foo + 12) // otra prueba"))
+;; archivo muchas líneas
+(calc-lexer (open-input-file "micodigo.txt"))
