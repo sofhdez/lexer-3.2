@@ -10,6 +10,18 @@
 
 (require (prefix-in : parser-tools/lex-sre))
 
+; Función que crea el output.txt
+(define file (open-output-file "output.txt"))
+(define (generate file lst)
+  (if(not(null? lst))
+     (begin
+       (display (car lst) file)
+       (newline file)
+       (generate file (cdr lst)))
+     (begin
+       (list)))
+  (close-output-port file))
+
 (define lang-lexer
   (lexer
    [(:+ (:or (char-range #\a #\z) (char-range #\A #\Z)))
@@ -89,3 +101,5 @@
 
 ;; archivo muchas líneas
 (lang-lexer (open-input-file "micodigo.txt"))
+
+(generate file (lang-lexer (open-input-file "micodigo.txt")))
