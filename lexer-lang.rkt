@@ -36,9 +36,16 @@
     (cons '(Paréntesis que cierra)
           (lang-lexer input-port))]
 
+   ;; ========> Números
    [(:: (:? #\-) (:+ (char-range #\0 #\9)))
     ; => Enteros
-    (cons `(INT ,(string->number lexeme))
+    (cons `(Entero ,(string->number lexeme))
+          (lang-lexer input-port))]
+
+   ;; ------------------haciendo------------------
+   [(:: (:? #\-) (:+ (char-range #\0 #\9)))
+    ; => Flotantes (reales)
+    (cons `(Real ,(string->number lexeme))
           (lang-lexer input-port))]
 
    ;; ========> Operadores
