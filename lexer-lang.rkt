@@ -1,5 +1,9 @@
 #lang slideshow
 ; main
+; Faltan
+;     - Flotantes (reales)
+;     - Regla de incio de las variables
+;     - Comentarios
 
 (require parser-tools/lex)
 
