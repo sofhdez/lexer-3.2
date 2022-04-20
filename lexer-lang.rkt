@@ -1,13 +1,12 @@
 #lang slideshow
 
 ; TODO
-;     - Flotantes (reales) solo los negativos
 ;     - Regla de las variables
 ;           Variables:
 ;                 Deben empezar con una letra (mayúscula o minúscula).
 ;                 Sólo están formadas por letras, números y underscore (‘_’).
 ;     - Nomenclatura del archivo output
-;           Lo mismo debe ser guardado en un archivo con la nomenclatura: 
+;           Lo mismo debe ser guardado en un archivo con la nomenclatura:
 ;           nombreDelArchivoDeEntrada+"-output.txt"
 
 (require racket/generator)
@@ -62,16 +61,32 @@
           (lexerAritmetico input-port))]
 
    [
-    (:or (:or (:: (:? (:+ (char-range #\0 #\9))) 
-    (:: "." (:+ (char-range #\0 #\9)))) 
-    (:: (:+ (char-range #\0 #\9)) ".")) 
-    (:: (:or (:+ (char-range #\0 #\9)) 
-    (:or (:: (:? (:+ (char-range #\0 #\9))) 
-    (:: "." (:+ (char-range #\0 #\9)))) 
-    (:: (:+ (char-range #\0 #\9)) "."))) 
-    (:: (:or "e" "E") 
-    (:? (:or "+" "-")) 
-    (:+ (char-range #\0 #\9)))))
+    (:or
+     ; Pointfloat
+     (:or (:: (:?
+               ; Intpart
+               (:: (:? #\-) (:+ (char-range #\0 #\9)))
+               )
+              ; Fraction
+              (:: "." (:+ (char-range #\0 #\9)))
+              )
+          (::
+           ; Intpart
+           (:: (:? #\-) (:+ (char-range #\0 #\9)))
+           ".")
+          )
+     ; Exponentfloat
+     (:: (:or
+          ; Intpart
+          (:: (:? #\-) (:+ (char-range #\0 #\9)))
+          ; Pointfloat
+          (:or (:: (:? (:: (:? #\-) (:+ (char-range #\0 #\9))))
+                   (:: "." (:: (:? #\-) (:+ (char-range #\0 #\9)))))
+               (:: (:: (:? #\-) (:+ (char-range #\0 #\9))) ".")))
+         ; Exponent
+         (:: (:or "e" "E")
+             (:? (:or "+" "-"))
+             (:+ (char-range #\0 #\9)))))
     ;     (floatnumber (:or pointfloat exponentfloat))
     ;     (pointfloat (:or (:: (:? intpart) fraction) (:: intpart ".")))
     ;     (exponentfloat (:: (:or intpart pointfloat) exponent))
