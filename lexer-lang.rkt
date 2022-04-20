@@ -5,16 +5,13 @@
 ;           Variables:
 ;                 Deben empezar con una letra (mayúscula o minúscula).
 ;                 Sólo están formadas por letras, números y underscore (‘_’).
-;     - Nomenclatura del archivo output
-;           Lo mismo debe ser guardado en un archivo con la nomenclatura:
-;           nombreDelArchivoDeEntrada+"-output.txt"
+;     - Falta que imprima el símbolo de los parentesís
 
-(require racket/generator)
-(require parser-tools/lex)
-
-(require parser-tools/lex-sre)
-
-(require (prefix-in : parser-tools/lex-sre))
+(require "generadorArchivo.rkt"
+         racket/generator
+         parser-tools/lex
+         parser-tools/lex-sre
+         (prefix-in : parser-tools/lex-sre))
 
 ; -------------- Función que crea el output.txt --------------
 (define (generate file lst)
@@ -87,12 +84,6 @@
          (:: (:or "e" "E")
              (:? (:or "+" "-"))
              (:+ (char-range #\0 #\9)))))
-    ;     (floatnumber (:or pointfloat exponentfloat))
-    ;     (pointfloat (:or (:: (:? intpart) fraction) (:: intpart ".")))
-    ;     (exponentfloat (:: (:or intpart pointfloat) exponent))
-    ;     (intpart (:+ (char-range #\0 #\9)))
-    ;     (fraction (:: "." (:+ (char-range #\0 #\9))))
-    ;     (exponent (:: (:or "e" "E") (:? (:or "+" "-")) (:+ (char-range #\0 #\9))))
     ; => Flotantes (reales)
     (cons `(Real ,(string->number lexeme))
           (lexerAritmetico input-port))]
@@ -136,9 +127,13 @@
     '()]
    ))
 
-;; archivo muchas líneas
-(define input (open-output-file "output.txt"))
+(define fileIn "micodigo.txt")
+(define fileOut (nameFileOut fileIn))
 
-(lexerAritmetico (open-input-file "micodigo.txt"))
+; Creamos el archivo de salida
+(define output (open-output-file fileOut))
 
-(generate input (lexerAritmetico (open-input-file "micodigo.txt")))
+; Llamamos al lexer y generamos el archivo
+(lexerAritmetico (open-input-file fileOut))
+
+(generate output (lexerAritmetico (open-input-file fileIn)))
