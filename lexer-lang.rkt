@@ -1,9 +1,10 @@
 #lang slideshow
 ; main
 ; Faltan
-;     - Flotantes (reales)
+;     - Flotantes (reales) solo los negativos
 ;     - Regla de incio de las variables
 
+(require racket/generator)
 (require parser-tools/lex)
 
 (require parser-tools/lex-sre)
@@ -54,8 +55,23 @@
     (cons `(Entero ,(string->number lexeme))
           (lang-lexer input-port))]
 
-   ;; ------------------haciendo------------------
-   [(:: (:? #\-) (:+ (char-range #\0 #\9)))
+   [
+    (:or (:or (:: (:? (:+ (char-range #\0 #\9))) 
+    (:: "." (:+ (char-range #\0 #\9)))) 
+    (:: (:+ (char-range #\0 #\9)) ".")) 
+    (:: (:or (:+ (char-range #\0 #\9)) 
+    (:or (:: (:? (:+ (char-range #\0 #\9))) 
+    (:: "." (:+ (char-range #\0 #\9)))) 
+    (:: (:+ (char-range #\0 #\9)) "."))) 
+    (:: (:or "e" "E") 
+    (:? (:or "+" "-")) 
+    (:+ (char-range #\0 #\9)))))
+    ;     (floatnumber (:or pointfloat exponentfloat))
+    ;     (pointfloat (:or (:: (:? intpart) fraction) (:: intpart ".")))
+    ;     (exponentfloat (:: (:or intpart pointfloat) exponent))
+    ;     (intpart (:+ (char-range #\0 #\9)))
+    ;     (fraction (:: "." (:+ (char-range #\0 #\9))))
+    ;     (exponent (:: (:or "e" "E") (:? (:or "+" "-")) (:+ (char-range #\0 #\9))))
     ; => Flotantes (reales)
     (cons `(Real ,(string->number lexeme))
           (lang-lexer input-port))]
