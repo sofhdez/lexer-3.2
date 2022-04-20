@@ -57,8 +57,7 @@
     (cons `(Entero ,(string->number lexeme))
           (lexerAritmetico input-port))]
 
-   [
-    (:or
+   [(:or
      ; Pointfloat
      (:or (:: (:?
                ; Intpart
