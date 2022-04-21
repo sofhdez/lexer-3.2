@@ -133,6 +133,6 @@
 (define output (open-output-file fileOut))
 
 ; Llamamos al lexer y generamos el archivo
-(lexerAritmetico (open-input-file fileOut))
+(lexerAritmetico (open-input-file fileIn))
 
 (generate output (lexerAritmetico (open-input-file fileIn)))
