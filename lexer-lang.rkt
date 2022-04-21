@@ -1,10 +1,6 @@
 #lang slideshow
 
 ; TODO
-;     - Regla de las variables
-;           Variables:
-;                 Deben empezar con una letra (mayúscula o minúscula).
-;                 Sólo están formadas por letras, números y underscore (‘_’).
 ;     - Falta que imprima el símbolo de los parentesís
 
 (require "generadorArchivo.rkt"
@@ -27,7 +23,8 @@
 ; -------------------------- Lexer --------------------------
 (define lexerAritmetico
   (lexer
-   [(:+ (:or (char-range #\a #\z) (char-range #\A #\Z)))
+   ;[(:+ (:or (char-range #\a #\z) (char-range #\A #\Z)))
+   [(::(:+ (char-range #\a #\z)) (:+ (:or (char-range #\a #\z) (char-range #\A #\Z) (char-range #\0 #\9) "_")))
 
     ; ========> Variable
 
@@ -132,7 +129,8 @@
 ; Creamos el archivo de salida
 (define output (open-output-file fileOut))
 
-; Llamamos al lexer y generamos el archivo
-(lexerAritmetico (open-input-file fileOut))
+; Llamamos al lexer
+(lexerAritmetico (open-input-file fileIn))
 
+; Generamos el archivo
 (generate output (lexerAritmetico (open-input-file fileIn)))
