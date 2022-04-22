@@ -29,8 +29,8 @@
 ; -------------------------- Lexer --------------------------
 (define lexerAritmetico
   (lexer
-   ;[(:+ (:or (char-range #\a #\z) (char-range #\A #\Z)))
-   [(::(:+ (char-range #\a #\z)) (:+ (:or (char-range #\a #\z) (char-range #\A #\Z) (char-range #\0 #\9) "_")))
+   [(:+ (:or (char-range #\a #\z) (char-range #\A #\Z)))
+   ;[(::(:+ (char-range #\a #\z)) (:+ (:or (char-range #\a #\z) (char-range #\A #\Z) (char-range #\0 #\9) "_")))
 
     ; ========> Variable
 
