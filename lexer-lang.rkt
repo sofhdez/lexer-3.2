@@ -1,3 +1,9 @@
+; Actividad 3.2 Programando parte de un Lenguaje de Programación
+; Sofía Margarita Hernández Muñoz A01655084
+; Emiliano Saucedo Arriola A01659258
+; Alfonso Pineda Castillo A01660394
+; Gael Eduardo Pérez Gómez A01753336
+
 #lang slideshow
 
 ; TODO
@@ -31,7 +37,7 @@
           (lexerAritmetico input-port))]
 
    ; ========> Comentarios
-   [(:: "//" (complement (:: any-string "//" any-string)))  ; falta que reconozca lo que sigue ed //
+   [(:: "//" (complement (:: any-string "//" any-string)))
 
     (cons `(Comentario ,(string->symbol lexeme))
           (lexerAritmetico input-port))]
