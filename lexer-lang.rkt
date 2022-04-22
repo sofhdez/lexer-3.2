@@ -29,13 +29,6 @@
 ; -------------------------- Lexer --------------------------
 (define lexerAritmetico
   (lexer
-   [(::(:* (char-range #\a #\z)) (:+ (:or (char-range #\a #\z) (char-range #\A #\Z) (char-range #\0 #\9) "_")))
-
-    ; ========> Variable
-
-    (cons `(Variable ,(string->symbol lexeme))
-          (lexerAritmetico input-port))]
-
    ; ========> Comentarios
    [(:: "//" (complement (:: any-string "//" any-string)))
 
@@ -89,6 +82,14 @@
     (cons `(Real ,(string->number lexeme))
           (lexerAritmetico input-port))]
 
+   [(::(:* (:or (char-range #\a #\z) (char-range #\A #\Z)))
+       (:+ (:or (char-range #\a #\z) (char-range #\A #\Z) (char-range #\0 #\9) "_")))
+
+    ; ========> Variable
+
+    (cons `(Variable ,(string->symbol lexeme))
+          (lexerAritmetico input-port))]
+
    ;; ========> Operadores
    [#\=
     ; => Asignación
@@ -140,6 +141,7 @@
 ; ; Pruebas
 ; (lexerAritmetico (open-input-string "b=4"))
 ; (lexerAritmetico (open-input-string "b_4 = 4"))
+; (lexerAritmetico (open-input-string "VARIABLE_4 = 469"))
 
 ; Generamos el archivo
 (generate output (lexerAritmetico (open-input-file fileIn)))
