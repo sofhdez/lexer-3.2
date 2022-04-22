@@ -8,6 +8,7 @@
 
 ; TODO
 ;     - Falta que imprima el símbolo de los parentesís
+;     - Quitar los parentesís de el output
 
 (require "generadorArchivo.rkt"
          racket/generator
