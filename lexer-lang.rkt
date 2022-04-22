@@ -29,8 +29,7 @@
 ; -------------------------- Lexer --------------------------
 (define lexerAritmetico
   (lexer
-   [(:+ (:or (char-range #\a #\z) (char-range #\A #\Z)))
-   ;[(::(:+ (char-range #\a #\z)) (:+ (:or (char-range #\a #\z) (char-range #\A #\Z) (char-range #\0 #\9) "_")))
+   [(::(:* (char-range #\a #\z)) (:+ (:or (char-range #\a #\z) (char-range #\A #\Z) (char-range #\0 #\9) "_")))
 
     ; ========> Variable
 
@@ -137,6 +136,10 @@
 
 ; Llamamos al lexer
 (lexerAritmetico (open-input-file fileIn))
+
+; ; Pruebas
+; (lexerAritmetico (open-input-string "b=4"))
+; (lexerAritmetico (open-input-string "b_4 = 4"))
 
 ; Generamos el archivo
 (generate output (lexerAritmetico (open-input-file fileIn)))
