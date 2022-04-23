@@ -10,12 +10,6 @@
 ;     - Falta que imprima el símbolo de los parentesís
 ;     - Quitar los parentesís de el output
 
-(define (elementsList lst)
-  (void (map display lst)))
-
-(define (deliver who when)
-  (printf " ~a  ~s" who when))
-
 (require "generadorArchivo.rkt"
          racket/generator
          parser-tools/lex
@@ -26,7 +20,9 @@
 (define (generate file lst)
   (if(not(null? lst))
      (begin
-       (display (deliver (caar lst) (cdar lst) file))
+       (display (caar lst) file)
+       (display " " file)
+       (display (first (cdar lst)) file)
        (newline file)
        (generate file (cdr lst)))
      (begin
