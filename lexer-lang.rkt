@@ -138,10 +138,5 @@
 ; Llamamos al lexer
 (lexerAritmetico (open-input-file fileIn))
 
-; ; Pruebas
-; (lexerAritmetico (open-input-string "b=4"))
-; (lexerAritmetico (open-input-string "b_4 = 4"))
-; (lexerAritmetico (open-input-string "VARIABLE_4 = 469"))
-
 ; Generamos el archivo
 (generate output (lexerAritmetico (open-input-file fileIn)))
