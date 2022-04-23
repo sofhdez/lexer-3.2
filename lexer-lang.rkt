@@ -7,7 +7,6 @@
 #lang slideshow
 
 ; TODO
-;     - Falta que imprima el símbolo de los parentesís
 ;     - Quitar los parentesís de el output
 
 (require "generadorArchivo.rkt"
@@ -39,12 +38,12 @@
    ;; ========> Símbolos especiales
    [#\(
     ; => Paréntesis que abre
-    (cons '(Paréntesis que abre)
+    (cons `(Paréntesis que abre, (string->symbol lexeme))
           (lexerAritmetico input-port))]
 
    [#\)
     ; => Paréntesis que cierra
-    (cons '(Paréntesis que cierra)
+    (cons `(Paréntesis que cierra, (string->symbol lexeme))
           (lexerAritmetico input-port))]
 
    ;; ========> Números
