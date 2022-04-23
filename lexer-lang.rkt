@@ -19,7 +19,9 @@
 (define (generate file lst)
   (if(not(null? lst))
      (begin
-       (display (car lst) file)
+       (display (caar lst) file)
+       (display " " file)
+       (display (first (cdar lst)) file)
        (newline file)
        (generate file (cdr lst)))
      (begin
