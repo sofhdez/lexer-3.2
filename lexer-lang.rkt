@@ -19,7 +19,9 @@
 (define (generate file lst)
   (if(not(null? lst))
      (begin
-       (display (car lst) file)
+       (display (caar lst) file)
+       (display " " file)
+       (display (first (cdar lst)) file)
        (newline file)
        (generate file (cdr lst)))
      (begin
@@ -30,7 +32,7 @@
 (define lexerAritmetico
   (lexer
    ; ========> Comentarios
-   [(:: "//" (complement (:: any-string "//" any-string)))
+   [(:: "//" (complement (:: any-string "//" any-string)) #\newline )
 
     (cons `(Comentario ,(string->symbol lexeme))
           (lexerAritmetico input-port))]
@@ -38,12 +40,12 @@
    ;; ========> Símbolos especiales
    [#\(
     ; => Paréntesis que abre
-    (cons `(Paréntesis que abre, (string->symbol lexeme))
+    (cons `("Paréntesis que abre", (string->symbol lexeme))
           (lexerAritmetico input-port))]
 
    [#\)
     ; => Paréntesis que cierra
-    (cons `(Paréntesis que cierra, (string->symbol lexeme))
+    (cons `("Paréntesis que cierra", (string->symbol lexeme))
           (lexerAritmetico input-port))]
 
    ;; ========> Números
