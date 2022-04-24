@@ -1,104 +1,148 @@
-      #lang slideshow
-      ; main
-      ; Faltan
-      ;     - Flotantes (reales)
-      ;     - Regla de incio de las variables
-      ;     - Comentarios
+; Actividad 3.2 Programando parte de un Lenguaje de Programación
+; Sofía Margarita Hernández Muñoz A01655084
+; Emiliano Saucedo Arriola A01659258
+; Alfonso Pineda Castillo A01660394
+; Gael Eduardo Pérez Gómez A01753336
 
-      (require parser-tools/lex)
+#lang slideshow
 
-      (require parser-tools/lex-sre)
+; TODO
+;     - Falta que imprima el símbolo de los parentesís
+;     - Quitar los parentesís de el output
 
-      (require (prefix-in : parser-tools/lex-sre))
+(require "generadorArchivo.rkt"
+         racket/generator
+         parser-tools/lex
+         parser-tools/lex-sre
+         (prefix-in : parser-tools/lex-sre))
 
-      (define file (open-output-file "output.txt"))
-      (define (generate file lst)
-            (if(not(null? lst))
-                  (begin
-                        (display (car lst) file)
-                        (newline file)
-                        (generate file (cdr lst)))
-                  (begin
-                  (list)))
-            (close-output-port file))
+; -------------- Función que crea el output.txt --------------
+(define (generate file lst)
+  (if(not(null? lst))
+     (begin
+       (display (caar lst) file)
+       (display " " file)
+       (display (first (cdar lst)) file)
+       (newline file)
+       (generate file (cdr lst)))
+     (begin
+       (list)))
+  (close-output-port file))
 
-      (define calc-lexer
-      (lexer
-      [(:+ (:or (char-range #\a #\z) (char-range #\A #\Z)))
-      ; (:: "/*" (:* (complement "*/")) "*/")
-      ; Matches any string that starts with "/*" and ends with "*/", including "/* */ */ */".
-      ; (complement "*/") matches any string except "*/". This includes "*" and "/" separately.
-      ; Thus (:* (complement "*/")) matches "*/" by first matching "*" and then matching "/".
-      ; Any other string is matched directly by (complement "*/").
-      ; In other words, (:* (complement "xx")) = any-string.
-      ; It is usually not correct to place a :* around a complement.
+; -------------------------- Lexer --------------------------
+(define lexerAritmetico
+  (lexer
+   [(::(:* (char-range #\a #\z)) (:+ (:or (char-range #\a #\z) (char-range #\A #\Z) (char-range #\0 #\9) "_")))
 
-      ; ========> Variable
+    ; ========> Variable
 
-      (cons `(Variable ,(string->symbol lexeme))
-            (calc-lexer input-port))]
+    (cons `(Variable ,(string->symbol lexeme))
+          (lexerAritmetico input-port))]
 
-      ; ========> Comentarios
-      [(:: "//" (:* (complement (:: any-string))))  ; falta que reconozca lo que sigue ed //
+   ; ========> Comentarios
+   [(:: "//" (complement (:: any-string "//" any-string)))
 
-      (cons `(Comentario ,(string->symbol lexeme))
-            (calc-lexer input-port))]
+    (cons `(Comentario ,(string->symbol lexeme))
+          (lexerAritmetico input-port))]
 
-            ;; ========> Símbolos especiales
-      [#\(
-      ; => Paréntesis que abre
-      (cons '(Paréntesis que abre)
-            (calc-lexer input-port))]
+   ;; ========> Símbolos especiales
+   [#\(
+    ; => Paréntesis que abre
+    (cons '(Paréntesis que abre)
+          (lexerAritmetico input-port))]
 
-      [#\)
-      ; => Paréntesis que cierra
-      (cons '(Paréntesis que cierra)
-            (calc-lexer input-port))]
+   [#\)
+    ; => Paréntesis que cierra
+    (cons '(Paréntesis que cierra)
+          (lexerAritmetico input-port))]
 
-      [(:: (:? #\-) (:+ (char-range #\0 #\9)))
-      ; => Enteros
-      (cons `(INT ,(string->number lexeme))
-            (calc-lexer input-port))]
+   ;; ========> Números
+   [(:: (:? #\-) (:+ (char-range #\0 #\9)))
+    ; => Enteros
+    (cons `(Entero ,(string->number lexeme))
+          (lexerAritmetico input-port))]
 
-      ;; ========> Operadores
-      [#\=
-      ; => Asignación
-      (cons `(Asignación ,(string->symbol lexeme))
-            (calc-lexer input-port))]
+   [(:or
+     ; Pointfloat
+     (:or (:: (:?
+               ; Intpart
+               (:: (:? #\-) (:+ (char-range #\0 #\9)))
+               )
+              ; Fraction
+              (:: "." (:+ (char-range #\0 #\9)))
+              )
+          (::
+           ; Intpart
+           (:: (:? #\-) (:+ (char-range #\0 #\9)))
+           ".")
+          )
+     ; Exponentfloat
+     (:: (:or
+          ; Intpart
+          (:: (:? #\-) (:+ (char-range #\0 #\9)))
+          ; Pointfloat
+          (:or (:: (:? (:: (:? #\-) (:+ (char-range #\0 #\9))))
+                   (:: "." (:: (:? #\-) (:+ (char-range #\0 #\9)))))
+               (:: (:: (:? #\-) (:+ (char-range #\0 #\9))) ".")))
+         ; Exponent
+         (:: (:or "e" "E")
+             (:? (:or "+" "-"))
+             (:+ (char-range #\0 #\9)))))
+    ; => Flotantes (reales)
+    (cons `(Real ,(string->number lexeme))
+          (lexerAritmetico input-port))]
 
-      [#\+
-      ; => Suma
-      (cons `(Suma ,(string->symbol lexeme))
-            (calc-lexer input-port))]
+   ;; ========> Operadores
+   [#\=
+    ; => Asignación
+    (cons `(Asignación ,(string->symbol lexeme))
+          (lexerAritmetico input-port))]
 
-      [#\-
-      ; => Resta
-      (cons `(Resta ,(string->symbol lexeme))
-            (calc-lexer input-port))]
+   [#\+
+    ; => Suma
+    (cons `(Suma ,(string->symbol lexeme))
+          (lexerAritmetico input-port))]
 
-      [#\*
-      ; => Multiplicación
-      (cons `(Multiplicación ,(string->symbol lexeme))
-            (calc-lexer input-port))]
+   [#\-
+    ; => Resta
+    (cons `(Resta ,(string->symbol lexeme))
+          (lexerAritmetico input-port))]
 
-      [#\/
-      ; => División
-      (cons `(División ,(string->symbol lexeme))
-            (calc-lexer input-port))]
+   [#\*
+    ; => Multiplicación
+    (cons `(Multiplicación ,(string->symbol lexeme))
+          (lexerAritmetico input-port))]
 
-      [#\^
-      ; => Potencia
-      (cons `(Potencia ,(string->symbol lexeme))
-            (calc-lexer input-port))]
+   [#\/
+    ; => División
+    (cons `(División ,(string->symbol lexeme))
+          (lexerAritmetico input-port))]
 
-      [whitespace
-      ; =>
-      (calc-lexer input-port)]
+   [#\^
+    ; => Potencia
+    (cons `(Potencia ,(string->symbol lexeme))
+          (lexerAritmetico input-port))]
 
-      [(eof)
-      '()]
-      ))
+   [whitespace
+    ; =>
+    (lexerAritmetico input-port)]
 
-      
+   [(eof)
+    '()]
+   ))
 
-      (generate file (calc-lexer (open-input-string "-3 * (foo + 12) //hola")))
+(define fileIn "micodigo.txt")
+(define fileOut (nameFileOut fileIn))
+
+; Creamos el archivo de salida
+(define output (open-output-file fileOut))
+
+; Llamamos al lexer
+(lexerAritmetico (open-input-file fileIn))
+
+; ; Pruebas
+; (lexerAritmetico (open-input-string "b=4"))
+; (lexerAritmetico (open-input-string "b_4 = 4"))
+
+; Generamos el archivo
+(generate output (lexerAritmetico (open-input-file fileIn)))

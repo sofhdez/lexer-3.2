@@ -1,0 +1,23 @@
+Variable b
+Asignación =
+Variable 7
+Variable a
+Asignación =
+Real 32.4
+Multiplicación *
+Paréntesis que
+Real -8.6
+Resta -
+Variable b
+Paréntesis que
+División /
+Real 6.1e-8
+Variable VARIA_3
+Asignación =
+Variable 67
+Variable d
+Asignación =
+Variable a
+Potencia ^
+Variable b
+Comentario // Esto es un comentario
