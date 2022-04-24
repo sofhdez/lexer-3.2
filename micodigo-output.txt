@@ -5,11 +5,11 @@ Variable a
 Asignación =
 Real 32.4
 Multiplicación *
-Paréntesis que
+ParéntesisAbre (
 Real -8.6
 Resta -
 Variable b
-Paréntesis que
+ParéntesisCierra )
 División /
 Real 6.1e-8
 Variable VARIA_3

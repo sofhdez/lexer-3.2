@@ -48,12 +48,12 @@
    ;; ========> Símbolos especiales
    [#\(
     ; => Paréntesis que abre
-    (cons '(Paréntesis que abre)
+    (cons `(ParéntesisAbre ,(string->symbol lexeme))
           (lexerAritmetico input-port))]
 
    [#\)
     ; => Paréntesis que cierra
-    (cons '(Paréntesis que cierra)
+    (cons `(ParéntesisCierra ,(string->symbol lexeme))
           (lexerAritmetico input-port))]
 
    ;; ========> Números
