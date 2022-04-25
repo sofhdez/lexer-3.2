@@ -12,3 +12,40 @@ Para establecer el documento a ingresar, es necesario **modificar la línea 134 
 Una vez realizado lo anterior, el usuario debe correr el programa en el editor de código de su preferencia, en caso de usar DrRacket, debe presionar la flecha verde ubicada en la parte superior derecha de la ventana. Esto le generará al usuario un archivo de salida, nombrado con el nombre del archivo de entrada más un “-output.txt”. Es decir, usando el ejemplo anterior, el nombre del archivo de salida sería “micodigo-output.txt”. Dicho archivo es el que contiene la tabla con cada uno de sus tokens encontrados, mencionada anteriormente.
 
 ![output file](https://github.com/sofhdez/lexer-3.2/blob/sofi/img/output.png)
+# Anexo 1: Gramática Independiente del Contexto (GIC)
+S → int | lambda
+
+S → var
+
+S → S Op S
+
+S → (S)
+
+S → var Asig S
+
+
+Op → +
+
+Op → -
+
+Op → *
+
+Op → /
+
+
+Asig → =
+
+
+var → <char><int><underscore> | <char><underscore><int>
+
+int → 0 - 9
+
+char → a | b | c | … | x | y | z | A | B | C | ... | X | Y | Z 
+
+float → <int> < . > <int | int exp [UnaryOp] int>
+
+underscore → _
+
+exp → E | e
+
+UnaryOp → - | lambda
