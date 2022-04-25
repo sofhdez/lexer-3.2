@@ -14,22 +14,38 @@ Una vez realizado lo anterior, el usuario debe correr el programa en el editor d
 ![output file](https://github.com/sofhdez/lexer-3.2/blob/sofi/img/output.png)
 # Anexo 1: Gramática Independiente del Contexto (GIC)
 S → int | lambda
+
 S → var
+
 S → S Op S
+
 S → (S)
+
 S → var Asig S
 
+
 Op → +
+
 Op → -
+
 Op → *
+
 Op → /
+
 
 Asig → =
 
+
 var → <char><int><underscore> | <char><underscore><int>
+
 int → 0 - 9
+
 char → a | b | c | … | x | y | z | A | B | C | ... | X | Y | Z 
+
 float → <int> < . > <int | int exp [UnaryOp] int>
+
 underscore → _
+
 exp → E | e
+
 UnaryOp → - | lambda
