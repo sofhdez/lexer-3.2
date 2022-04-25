@@ -131,14 +131,14 @@
     '()]
    ))
 
-(define fileIn "micodigo.txt")
-(define fileOut (nameFileOut fileIn))
+(define input "micodigo.txt")
+(define fileOut (nameFileOut input))
 
 ; Creamos el archivo de salida
 (define output (open-output-file fileOut))
 
 ; Llamamos al lexer
-(lexerAritmetico (open-input-file fileIn))
+(lexerAritmetico (open-input-file input))
 
 ; Generamos el archivo
-(generate output (lexerAritmetico (open-input-file fileIn)))
+(generate output (lexerAritmetico (open-input-file input)))
